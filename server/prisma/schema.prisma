@@ -14,4 +14,39 @@ model User{
   displayname   String
   password      String
   createdAt     DateTime  @default(now())
+
+  sessions    FocusSession[]
+}
+
+model FocusSession{
+  id                  String @id @default(uuid())
+
+
+  // Plan 
+  plannedStartTime    DateTime
+  plannedEndTime      DateTime
+  focusDuration       Int
+  breakDuration       Int
+
+  plannedCycles       Int @default(0)
+
+  // Reality 
+  actualStartTime   DateTime  @default(now())
+  actualEndTime     DateTime?
+
+  totalFocusTime    Int   @default(0)
+  completedCycles   Int   @default(0)
+  incompleteCycles  Int   @default(0)
+
+  status  SessionStatus @default(ONGOING)
+
+  userId  String
+  user  User  @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+enum SessionStatus {
+  ONGOING
+  COMPLETED
+  ABORTED
 }
